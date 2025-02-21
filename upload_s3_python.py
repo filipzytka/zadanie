@@ -65,11 +65,11 @@ except IOError:
 fh.close()
 
 # Upload to S3
-S3_BUCKET_NAME = 'new-bucket-e05ab0e0'
+S3_BUCKET_NAME = 'applicant-task'
 s3_conn = boto3.client('s3')
 
 try:
-    response = requests.get(META_DATA_URL + '/instance-id', timeout=2)
+    response = requests.get(META_DATA_URL + '/instance-id')
     response.raise_for_status()
     instance_id = response.text.strip()
 except requests.RequestException as e:
@@ -80,7 +80,7 @@ try:
     with io.open(EC2_DATA_FILE, 'r', encoding='utf-8') as fh:
         s3_conn.put_object(
             Bucket=S3_BUCKET_NAME,
-            Key='system_info_{}.txt'.format(instance_id),
+            Key='r4p17/system_info_{}.txt'.format(instance_id),
             Body=fh.read()
         )
     print("File uploaded to S3 bucket {} as system_info_{}.txt".format(S3_BUCKET_NAME, instance_id))
